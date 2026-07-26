@@ -26,3 +26,10 @@ class database:
     def edit_lname(self,lname,id):
         self.cur.execute('update info set lname = ? where id = ?',(lname,id))
         self.con.commit()
+
+    def edit_email():
+        pass
+
+    def edit_pass(self,pas,id):
+        self.cur.execute('update info set pas = ? where id = ?',(pas,id))
+        self.con.commit()
