@@ -43,7 +43,7 @@ def s_up():
                 messagebox.showinfo('تمام','اطلاعات با موفقیت اضافه شدند')
                 clear()
                 break
-       
+
 
 def s_in():
     name = ent_Fname.get()
@@ -71,6 +71,7 @@ def s_in():
     else:
         messagebox.showinfo('خطا','کاربر یافت نشد !')
         clear()
+
         
 def clear():
     ent_Fname.delete(0,END)
@@ -91,7 +92,12 @@ def win_oo(infor):
         ent_rename.delete(0,END)
         ent_relname.delete(0,END)
 
-
+    def sin_out():
+        a = messagebox.askyesno('Are you sure?','You want sing out from your account?')
+        if a:
+            oo.withdraw()
+            win.deiconify()
+        
     global lbl_wellcome , lst_info
     oo = Toplevel(win)
     ars1 = 400
@@ -129,6 +135,7 @@ def win_oo(infor):
     btn_ch_email = Button(oo,text='Change Email',height=2,width=16,command=ch_email)
     btn_ch_email.place(x=220,y=170)
 
+    btn_out = Button(oo,text='Sing out',command=sin_out).place(x=20,y=580)
 
     lst_info = Listbox(oo,width=50)
     lst_info.pack(padx=10,pady=200)
@@ -144,6 +151,7 @@ def win_oo(infor):
     #oo.mainloop()
 
 def ch_pas():
+    #پنجره تغییر رمز
     global ch_pas_1
     ch_pas_1 = Toplevel()
     ars1 = 320
@@ -160,6 +168,44 @@ def ch_pas():
         x = messagebox.askyesno("هشدار",'آیا میخوای از این بخش خارج بشی؟')
         if x:
             ch_pas_1.withdraw()
+                    
+        pass
+
+    def ch_btn():
+        x = db1.select_info()
+        info_karbar = ''
+        id_karbar = user[0]
+        for i in x:
+            if i[0] == id_karbar:
+                info_karbar = i
+        cur_pass = ent_cur_pass.get()
+        new_pass = ent_new_pass.get()
+        renew_pass = ent_renew_pass.get()
+        if cur_pass != info_karbar[4]:
+            messagebox.showerror('خطا','! رمز فعلی اشتباه است')
+            pass
+        elif new_pass != renew_pass:
+            messagebox.showerror('خطا','! رمز جدید در هر دو فیلد یکسان نیست')
+            pass
+        elif new_pass == '' or renew_pass == '':
+            messagebox.showerror('خطا',' !فیلد رمز جدید خالی میباشد')
+            pass
+        elif cur_pass == new_pass:
+            txt = f""" هست {new_pass} رمز فعلی شما هم اکنون
+            اگر میخواهید تغییر دهید رمزتان را رمز جدیدی وارد کنید """
+            messagebox.showerror('',txt)
+            pass
+        else:
+            db1.edit_pass(new_pass,id_karbar)
+            text_new_pass = f''' رمز شما با موفقیت تغییر یافت 
+            رمز جدید شما : {new_pass}'''
+            messagebox.showinfo('انجام شد',text_new_pass)
+            ent_cur_pass.delete(0,END)
+            ent_new_pass.delete(0,END)
+            ent_renew_pass.delete(0,END)
+            ch_pas_1.withdraw()
+            pass
+        
 
     ent_cur_pass = Entry(ch_pas_1)
     ent_cur_pass.place(x=170,y=10)
@@ -173,11 +219,11 @@ def ch_pas():
     lb1_new_pas = Label(ch_pas_1,text='Enter a new password :').place(x=20,y=35)
     lb1_renew_pas = Label(ch_pas_1,text='Re-enter new password :').place(x=20,y=60)
 
-    btn_changes = Button(ch_pas_1,text='Saving Changes',height=2,width=12)
+    btn_changes = Button(ch_pas_1,text='Saving Changes',height=2,width=12,command=ch_btn)
     btn_changes.place(x=50,y=110)
     btn_exit = Button(ch_pas_1,text=('Exit'),height=2,width=12,command=exit_1)
     btn_exit.place(x=190,y=110)
-
+    # پایان پنجره تغییر رمز
 
 
 def ch_email():
